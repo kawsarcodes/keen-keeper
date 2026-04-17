@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { ChevronDown } from 'lucide-react';
+import { ArrowUpDown, ChevronDown, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import callIcon from '../assets/call.png';
@@ -9,12 +9,26 @@ import videoIcon from '../assets/video.png';
 export default function Timeline() {
   const { timeline } = useOutletContext();
   const [filterType, setFilterType] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOrder, setSortOrder] = useState('newest');
 
   const filteredEntries = useMemo(() => {
     return (timeline || [])
-      .filter(entry => filterType === 'All' || entry.type === filterType)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [timeline, filterType]);
+      .filter((entry) => {
+        const matchesType = filterType === 'All' || entry.type === filterType;
+        const query = searchQuery.toLowerCase();
+        const matchesSearch =
+          entry.friendName.toLowerCase().includes(query) ||
+          entry.type.toLowerCase().includes(query);
+          
+        return matchesType && matchesSearch;
+      })
+      .sort((a, b) => {
+        const timeA = new Date(a.date).getTime();
+        const timeB = new Date(b.date).getTime();
+        return sortOrder === 'newest' ? timeB - timeA : timeA - timeB;
+      });
+  }, [timeline, filterType, searchQuery, sortOrder]);
 
   const getIcon = (type) => {
     const iconClass = "w-8 h-8 object-contain";
@@ -30,19 +44,53 @@ export default function Timeline() {
     <div className="max-w-3xl mx-auto py-8 px-4">
       <h1 className="text-4xl font-bold text-[#1e293b] mb-8">Timeline</h1>
 
-      <div className="relative mb-8 w-64">
-        <select
-          className="appearance-none w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 transition-all cursor-pointer"
-          value={filterType}
-          onChange={(e) => setFilterType(e.target.value)}
-        >
-          <option value="All">Filter timeline</option>
-          <option value="Call">Call</option>
-          <option value="Text">Text</option>
-          <option value="Video">Video</option>
-        </select>
-        <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-          <ChevronDown className="h-4 w-4 text-gray-400" />
+      <div className="flex flex-col md:flex-row gap-4 mb-8">
+        <div className="relative flex-grow">
+          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search by friend name or interaction type..."
+            className="w-full bg-white border border-gray-200 rounded-sm pl-10 pr-4 py-2.5 text-gray-700 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        <div className="flex gap-4">
+          <div className="relative w-36 shrink-0">
+            <select
+              className="appearance-none w-full bg-white border border-gray-200 rounded-sm px-4 py-2.5 text-gray-600 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer"
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+            >
+              <option value="All">All types</option>
+              <option value="Call">Call</option>
+              <option value="Text">Text</option>
+              <option value="Video">Video</option>
+            </select>
+            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+              <ChevronDown className="h-4 w-4 text-gray-400" />
+            </div>
+          </div>
+
+          <div className="relative w-40 shrink-0">
+            <select
+              className="appearance-none w-full bg-white border border-gray-200 rounded-sm pl-9 pr-4 py-2.5 text-gray-600 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+            </select>
+            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+              <ArrowUpDown className="h-4 w-4 text-gray-400" />
+            </div>
+            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+              <ChevronDown className="h-4 w-4 text-gray-400" />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -56,7 +104,7 @@ export default function Timeline() {
               <div className="shrink-0 w-10 flex justify-center">
                 {getIcon(entry.type)}
               </div>
-
+              
               <div className="flex flex-col">
                 <div className="text-[15px]">
                   <span className="font-bold text-gray-800">{entry.type}</span>
