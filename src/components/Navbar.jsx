@@ -34,8 +34,8 @@ export default function Navbar() {
                                     key={link.name}
                                     to={link.path}
                                     className={`flex items-center space-x-2 px-3 py-2 rounded-sm text-sm font-medium transition-colors ${isActive
-                                            ? "bg-[#244D3F] text-white"
-                                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                        ? "bg-[#244D3F] text-white"
+                                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                                         }`}
                                 >
                                     <Icon className="w-4 h-4" />
@@ -68,8 +68,8 @@ export default function Navbar() {
                                     to={link.path}
                                     onClick={() => setIsOpen(false)}
                                     className={`flex items-center space-x-3 px-3 py-3 rounded-sm text-base font-medium ${isActive
-                                            ? "bg-[#244D3F] text-white"
-                                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                        ? "bg-[#244D3F] text-white"
+                                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                                         }`}
                                 >
                                     <Icon className="w-5 h-5" />
