@@ -3,6 +3,7 @@ import './App.css';
 import Layout from './components/Layout';
 import FriendDetail from './pages/FriendDetail';
 import Home from './pages/Home';
+import NotFound from './pages/NotFound';
 import Stats from './pages/Stats';
 import Timeline from './pages/Timeline';
 
@@ -15,6 +16,7 @@ export default function App() {
           <Route path="friend/:id" element={<FriendDetail />} />
           <Route path="timeline" element={<Timeline />} />
           <Route path="stats" element={<Stats />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </Router>
