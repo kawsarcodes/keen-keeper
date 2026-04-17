@@ -25,18 +25,18 @@ export default function FriendCard({ friend }) {
 
       <div className="flex flex-wrap gap-1 justify-center mb-4 min-h-[32px]">
         {friend.tags.slice(0, 2).map(tag => (
-          <span
+         <span
             key={tag}
-            className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] uppercase font-bold tracking-wider rounded-full"
+            className="inline-flex items-center justify-center px-2 h-5 bg-[#CBFADB] text-[#244D3F] text-[10px] uppercase font-bold tracking-wider rounded-full"
           >
             {tag}
           </span>
         ))}
       </div>
 
-      <div className={`px-3 py-1 text-xs font-semibold rounded-full mt-auto ${friend.status === 'on-track' ? "bg-emerald-500 text-white" :
-        friend.status === 'almost due' ? "bg-amber-500 text-white" :
-          "bg-red-500 text-white"
+      <div className={`px-3 py-1 text-xs font-semibold rounded-full mt-auto ${friend.status === 'on-track' ? "bg-[#244D3F] text-white" :
+        friend.status === 'almost due' ? "bg-[#EFAD44] text-white" :
+          "bg-[#EF4444] text-white"
         }`}>
         {friend.status === 'on-track' && "On-Track"}
         {friend.status === 'almost due' && "Almost Due"}
